@@ -1,0 +1,280 @@
+---
+title: "How to scrape a website"
+author: "Sam Levy | EPL group presentation"
+date: "9/3/2021"
+output: 
+  ioslides_presentation:
+    css: '/Users/salevy/Downloads/scrollslide.css'
+    widescreen: TRUE
+---
+
+<style>
+.leaflet-control-layers-selector {
+  width: auto;
+}
+</style>
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(sidrar)
+library(DT)
+library(leaflet)
+library(sf)
+```
+
+## Overview of presentation
+
+1. **Difference between APIs & scraping**
+2. **How to extract data via an API**
+3. **How to determine if a website is using an API**
+4. **How to scrape data**
+
+  <font size="5">note: examples will use R</font>
+
+<center><img src=https://ca-times.brightspotcdn.com/dims4/default/fa06a0e/2147483647/strip/true/crop/2000x1125+0+0/resize/840x473!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Ff0%2F45%2Fc8c6df9b74df5ce328db5631cc09%2Fla-jadamstein-1482260620-snap-photo style="height: 300px"/></center>
+
+## What is web scraping? 
+- Range of techniques to use software (e.g. R & Python) to extract **data embedded in websites** and store it in **easy to analyse formats**
+- it is often long, fiddly & computationally intensive 
+- Web scraping can also breach the usage rights of a website & may lead to you getting blocked
+
+
+<div class="rows-2">
+  <center>![](https://www.webharvy.com/images/web%20scraping.png)</center>
+
+  
+## What are Application Programming Interfaces (APIs)?
+- APIs are structured interfaces  allowing a program/computer to access the features or data of another program/computer directly & should come with documentation explaining how to use it
+- REST APIs are the most common & are used by large organisations (e.g. Twitter,UNDP, IBGE) to help you access their data 
+- Also used by many websites to access the data they are displaying
+
+<center><img src="https://miro.medium.com/max/1400/1*5xCTnv1iKyFSaF8iKU_ltw.png" style="height: 250px"/></center>
+
+
+
+## API example - IBGE
+- IBGE offers both an API & a [website](https://apisidra.ibge.gov.br/home/ajuda) to help you learn how to access it
+- Like all REST APIs functions via http requests (essentially a structured URL)
+- e.g. population of Brazil over time can be accessed via https://apisidra.ibge.gov.br/values/t/6579/v/9324/n3/all?formato=json
+
+
+```{r message=FALSE, warning=FALSE, , echo=FALSE, wrap=TRUE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+<iframe src=https://sam-a-levy.github.io/how-to-scrape/AjudadaAPISidra.html></iframe>
+
+
+
+## API example - IBGE
+This will be provide data simply by searching the URL in your browser
+
+```{r message=FALSE, warning=FALSE, , echo=FALSE, wrap=TRUE}
+#shiny::includeHTML("https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324?formato=json")
+#knitr::include_url("https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324?formato=json")
+knitr::opts_chunk$set(echo = FALSE)
+```
+<iframe src=https://sam-a-levy.github.io/how-to-scrape/9324.html></iframe>
+
+## API example - IBGE
+But can be also easily read by a program like R or Python
+
+```{r message=FALSE, warning=FALSE, echo=TRUE}
+url <- "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324?formato=json"
+pop <- jsonlite::fromJSON(url) # read json
+```
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+datatable(janitor::row_to_names(pop,1), extensions = 'Scroller', options = list(deferRender = F, dom = 't',
+                                                                      columnDefs = list(list(className = 'dt-center',
+                                                                                             targets = 5)),
+                                                                     scrollY = 300, scroller = TRUE, scrollX = T,
+                                                                     pageLength = 5))
+```
+
+
+
+## API example - IBGE
+- For larger sites, there are often already packages in R/Python etc. to access these data without having to learn the API syntax
+- In R, there is a package to access the IBGE API called `sidrar`
+```{r message=FALSE, warning=FALSE, echo=TRUE}
+library(sidrar)
+```
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+knitr::include_url("https://www.rdocumentation.org/packages/sidrar/versions/0.2.6")
+```
+
+## API example - IBGE
+Which will return the exact same data with less hassle 
+
+```{r message=FALSE, warning=FALSE, echo=TRUE}
+pop_sidrar <- get_sidra(6579, variable = 9324,geo="State") #extract IBGE data
+```
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+datatable(pop_sidrar, extensions = 'Scroller', options = list(deferRender = F, dom = 't',
+                                                                      columnDefs = list(list(className = 'dt-center',
+                                                                                             targets = 5)),
+                                                                     scrollY = 300, scroller = TRUE, scrollX = T,
+                                                                     pageLength = 5))
+```
+
+## Websites that use APIs & how to access
+- Many times a website will be using an API to present data on its website, although this may not be obvious
+- To determine this you need to use the **inspector panel** & other **developer tools**
+  
+  <center><img src=https://i.stack.imgur.com/pyOWC.png style="height: 400px"/></center>
+  
+## Example - Barry Hallebaut's suppliers 
+- [Barry Hallebaut website](https://www.barry-callebaut.com/en/group/forever-chocolate/sustainable-range/transparency-and-traceability-our-cocoa-supply-chain) is one such case
+
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+#knitr::include_url("https://www.barry-callebaut.com/en/group/forever-chocolate/sustainable-range/transparency-and-traceability-our-cocoa-supply-chain")
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+ <center><img src= https://i.ytimg.com/vi/EpjvJAmIEmY/maxresdefault.jpg style= "height: 400px"/></center>
+
+## Example - Barry Hallebaut's suppliers
+```{r message = FALSE, warning=FALSE, echo=TRUE}
+url2 <- "https://services1.arcgis.com/gASdGGCiDRjdrOYB/arcgis/rest/services/Cooperatives_and_Districts_February_2021/FeatureServer/0/query?f=geojson&where=1%3D1&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=*&maxRecordCountFactor=4&outSR=102100&resultOffset=0&resultRecordCount=8000&cacheHint=true&quantizationParameters=%7B%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A1.0583354500042335%2C%22extent%22%3A%7B%22xmin%22%3A-8.34314999999998%2C%22ymin%22%3A2.908540000000073%2C%22xmax%22%3A12.520860000000027%2C%22ymax%22%3A7.605490000000032%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%2C%22latestWkid%22%3A4326%7D%7D%7D"
+data_sf <- geojsonsf::geojson_sf(url2) #read geojson as simple feature shapefile
+```
+  <center>
+```{r message=FALSE,warning=FALSE,echo=FALSE}
+leaflet(data = data_sf,height = 300) %>% addTiles() %>%
+  addMarkers(~Longitude, ~Latitude, popup = ~as.character(paste0(data_sf$Warehouse_Name," | ",data_sf$Certification)),
+             label = ~as.character(paste0(data_sf$Warehouse_Name," | ",data_sf$Certification)))
+```
+</center>
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+datatable(data_sf, height=200,extensions = 'Scroller', options = list(deferRender = F, dom = 't',
+                                                                      columnDefs = list(list(className = 'dt-center',
+                                                                                             targets = 2)),
+                                                                     scrollY = 300, scroller = TRUE, scrollX = T,
+                                                                     pageLength = 2))
+```
+
+## Websites that need to be scraped
+Only scrape a website if:
+
+- The site/site owner does not provide an API
+- The site does not access its data from an accessible external source (e.g. via API)
+   - **Note: some sites may use a password protected external source & you will need to scrape**
+
+## Scraping
+Scraping is done through three key steps:
+
+1. Get the HTML for the web page that you want to scrape
+2. Determine what part(s) of the page contain data you want & what HTML/CSS/XPATH refer to these parts(s) of the page
+4. Select the HTML and parse it in the appropriate data type (shapefile, datatable etc.)
+
+## Working with HTML
+- HTML uses a tree structure of nodes (also called elements), styled using CSS
+- A node will have HTML tags & can have CSS classes/other features `<tag.class>`
+- specific nodes can be identified through their node/class or through XPATH, a query expression for node selection
+
+<center><img src= https://i.ytimg.com/vi/90kC1YLNF3U/maxresdefault.jpg style= "height: 330px"/></center>
+
+
+## Example - AgroLink
+Brazilian agro-business company that tracks prices of various commodities over time, incl. [soy](https://www.agrolink.com.br/cotacoes/historico/mt/soja-em-grao-sc-60kg)
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+knitr::include_url("https://www.agrolink.com.br/cotacoes/historico/mt/soja-em-grao-sc-60kg")
+```
+
+## Example - AgroLink
+```{r message=FALSE, warning=FALSE, echo=TRUE}
+library(rvest)
+library(xml2)
+
+url3 <- "https://www.agrolink.com.br/cotacoes/historico/mt/soja-em-grao-sc-60kg"
+html <- read_html(url3) # read html
+node <- html_element(html,".table-striped.agk-cont-tb1") # extract node
+dat_scrape <- html_table(node,dec=",") # convert to data table
+```
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+datatable(dat_scrape, extensions = 'Scroller', options = list(deferRender = F, dom = 't',
+                                                                      columnDefs = list(list(className = 'dt-center',
+                                                                                             targets = 3)),
+                                                                     scrollY = 300, scroller = TRUE, scrollX = T,
+                                                                     pageLength = 5))
+```
+## Scraping less structured data
+- Much of the data online you may want to scrape will not be already structured into tables
+- For instance [Cargill's grievance data](https://www.cargill.com/sustainability/palm-oil/managing-grievances)
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+knitr::include_url("https://www.cargill.com/sustainability/palm-oil/managing-grievances")
+```
+
+## Example - Cargill grievances
+```{r message=FALSE,warning=FALSE,echo=TRUE}
+url4 <- "https://www.cargill.com/sustainability/palm-oil/managing-grievances"
+html2 <- read_html(url4) #read html
+
+# scrape company names (dropdown headers)
+comps <- html_elements(html2,".showhide-header") %>% 
+  html_text2(preserve_nbsp=TRUE)
+
+#scrape grievance issue per company & per grievance entity  
+grievance <- html2 %>%
+  html_elements(".mod-content") %>%                  #extract node for each company
+  html_text(trim=T)  %>%                             #extract text
+  as.list() %>%                                      #convert to list
+  map(str_split,pattern="Issue Under Review: ",simplify=T) %>% #split at issue
+  map(function(x){x[x!=""]}) %>%                     #drop empty strings
+  map(function(x){map(x,str_split,pattern="\n\n",n=3,simplify=T)}) #split at \n\n 3x
+
+#attach company names to grievance data
+names(grievance) <- comps[comps!=""]
+```
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+data.tree::FromListSimple(map(grievance[1:4],function(x){map(x,as.list)})) 
+```
+## Example - Cargill grievances
+```{r message=FALSE,warning=FALSE,echo=TRUE}
+# convert from nested list to longform dataframe with reshape2::melt
+dat_scrape2 <- grievance %>%                         
+  reshape2::melt(level=2) %>%         
+  pivot_wider(id_cols=c(L2,L3),       #reshape to wide
+              names_from = Var2,
+              values_from = value) %>%
+  separate(`3`,into = c("Other_info","Action_taken"),
+           sep = "Actions Cargill Has Taken to Date") %>%
+  separate(`2`,into=c("Entity","Date","Status"),
+           sep = "\n|-|–") %>%
+  rename(c("Supplier"=L2,"Subsupplier"=L3,"Grievance"=`1`))
+```
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+datatable(dat_scrape2, extensions = 'Scroller', 
+          options = list(deferRender = F, dom = 't',columnDefs = list(list(className = 'dt-left',targets = 3)),
+                         scrollY = 300, scroller = TRUE, scrollX = T,pageLength = 5))
+```
+
+## key takeaways:
+- use of lists
+- recursive activities
+- identifying correct node & limitations of this with messy data
+
+## Things not covered
+- how to deal with scrapes that don't work (& thus break your code)
+- dynamic websites + how to deal with (selenium / POST)
+
+## Conclusion
+- A lot of data online is available through APIs, even when it doesn't appear to be
+- Where possible, use an API, as it will almost always be easier & more reliable than scraping
+- In either case, the **inspector panel** & **developer tools** are your friends
+  - Use the **network tab** to search for an API or other external data source
+  - Use the **elements tab** to search for the node(s) you want to scrape
+
+## Useful packages in R 
+- `rvest` - main package for scraping websites in R (uses `xml2` & `httr`)
+- `xml2` - parses XML & HTML(Languages used for encoding data on the web). `XML` is an alternative
+- `httr` - makes http requests (e.g. to an API) easier
+- `RSelenium` - advanced scraping tool that allows you to create virtual browser (e.g. to get around logins)
+- `data.tree` - package for working with/visualising tree structured data (like XML/HTML)
+- `polite` - scraping sites politely
+- `jsonlite` - read json data into R easily
+- `geojsonio` - read geojson data into R easily
+
+##  {data-background="https://media.makeameme.org/created/thanks-for-watching-5aa19e.jpg"}
