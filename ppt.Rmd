@@ -275,9 +275,9 @@ datatable(dat_scrape2, extensions = 'Scroller',
 1. Scraping is messy & very fiddly
 2. Where data has clear structure reflected in nodes with unique identifiers (via tag/class/XPATH), scraping can be completed with a very small amount of code
 3. Where data has a messy structure, you should:
-  - Using recursive procedures to work node by node (e.g. `purrr::map` in R) 
-  - Using nested data structures that maintain html trees (e.g. `lists` in R)
-  - Use string splitting tools to split data where appropriate
+    - Use recursive procedures to work node by node (e.g. `purrr::map` in R) 
+    - Use nested data structures that maintain html trees (e.g. `lists` in R)
+    - Use string splitting tools to split data where appropriate
 
 ## Things not covered
 - How to deal with scrapes that don't work & thus break your code (can use `purrr::possibly`)
