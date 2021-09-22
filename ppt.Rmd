@@ -293,6 +293,9 @@ datatable(dat_scrape2, extensions = 'Scroller',
   - Use the **network tab** to search for an API or other external data source
   - Use the **elements tab** to search for the node(s) you want to scrape
 
+
+<font size="5">note: code used to create this presentation can be found on my [GitHub](https://github.com/sam-a-levy/how-to-scrape)</font>
+
 ## Useful packages in R 
 - `rvest` - main package for scraping websites in R (uses `xml2` & `httr`)
 - `xml2` - parses XML & HTML(Languages used for encoding data on the web). `XML` is an alternative
