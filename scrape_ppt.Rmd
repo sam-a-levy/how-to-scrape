@@ -24,7 +24,7 @@ library(sf)
 
 ## Overview of presentation
 
-1. **Difference between APIs & scraping**
+1. **Difference between APIs & web scraping**
 2. **How to extract data via an API**
 3. **How to determine if a website is using an API**
 4. **How to scrape data**
@@ -133,6 +133,16 @@ knitr::opts_chunk$set(echo = FALSE)
 
  <center><img src= https://i.ytimg.com/vi/EpjvJAmIEmY/maxresdefault.jpg style= "height: 400px"/></center>
 
+## Example - Barry Hallebaut's suppliers 
+Element tab will help you find which html nodes containing the desired data
+
+ <center><img src= https://sam-a-levy.github.io/how-to-scrape/Screenshot-barry-cal-2.png style= "height: 500px"/></center>
+
+## Example - Barry Hallebaut's suppliers 
+Network tab will help you find out whether the website is drawing its data from an external source (incl. an API and where to find these sources). In this case, website is accessing data from https://services1.arcgis.com
+
+ <center><img src= https://sam-a-levy.github.io/how-to-scrape/Screenshot-barry-cal-1.png style= "height: 425px"/></center>
+
 ## Example - Barry Hallebaut's suppliers
 ```{r message = FALSE, warning=FALSE, echo=TRUE}
 url2 <- "https://services1.arcgis.com/gASdGGCiDRjdrOYB/arcgis/rest/services/Cooperatives_and_Districts_February_2021/FeatureServer/0/query?f=geojson&where=1%3D1&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=*&maxRecordCountFactor=4&outSR=102100&resultOffset=0&resultRecordCount=8000&cacheHint=true&quantizationParameters=%7B%22mode%22%3A%22view%22%2C%22originPosition%22%3A%22upperLeft%22%2C%22tolerance%22%3A1.0583354500042335%2C%22extent%22%3A%7B%22xmin%22%3A-8.34314999999998%2C%22ymin%22%3A2.908540000000073%2C%22xmax%22%3A12.520860000000027%2C%22ymax%22%3A7.605490000000032%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%2C%22latestWkid%22%3A4326%7D%7D%7D"
@@ -160,16 +170,26 @@ Only scrape a website if:
 - The site does not access its data from an accessible external source (e.g. via API)
    - **Note: some sites may use a password protected external source & you will need to scrape**
 
-## Scraping
+## Ethics of web scraping
+- Web scraping can be illegal if:
+  - Terms/conditions specifically prohibit downloading/copying content
+  - You pass off data as your own/republish in original form (i.e. breach "fair use")
+- In practice, scraping is tolerated if you **do not disrupt websites' regular use**
+  - This can occur if querying website repeatedly & accessing large number of pages (i.e. many requests to site's server) causing server to run out of resources or crash, blocking normal users access
+  - This is essentially a Denial of Service (DoS) attack & can lead to you being blocked by the website
+  - To avoid this, you can add a random delay between requests, giving server enough time to handle requests from all users
+- Further reading [here](https://data-lessons.github.io/library-webscraping-DEPRECATED/05-conclusion/) & [here](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01)
+
+## Basic procudre of a web scrape
 Scraping is done through three key steps:
 
 1. Get the HTML for the web page that you want to scrape
 2. Determine what part(s) of the page contain data you want & what HTML/CSS/XPATH refer to these parts(s) of the page
-4. Select the HTML and parse it in the appropriate data type (shapefile, datatable etc.)
+3. Select the desired HTML elements and parse them in the appropriate data type (shapefile, datatable etc.)
 
 ## Working with HTML
 - HTML uses a tree structure of nodes (also called elements), styled using CSS
-- A node will have HTML tags & can have CSS classes/other features `<tag.class>`
+- A node will have HTML tags & can have CSS classes/other features with following syntax: `<tag.class>`
 - specific nodes can be identified through their node/class or through XPATH, a query expression for node selection
 
 <center><img src= https://i.ytimg.com/vi/90kC1YLNF3U/maxresdefault.jpg style= "height: 330px"/></center>
@@ -184,13 +204,13 @@ knitr::include_url("https://www.agrolink.com.br/cotacoes/historico/mt/soja-em-gr
 
 ## Example - AgroLink
 ```{r message=FALSE, warning=FALSE, echo=TRUE}
-library(rvest)
+library(rvest)                                           # read necessary R packages
 library(xml2)
 
 url3 <- "https://www.agrolink.com.br/cotacoes/historico/mt/soja-em-grao-sc-60kg"
-html <- read_html(url3) # read html
-node <- html_element(html,".table-striped.agk-cont-tb1") # extract node
-dat_scrape <- html_table(node,dec=",") # convert to data table
+html <- read_html(url3)                                  # stage 1: get html
+node <- html_element(html,".table-striped.agk-cont-tb1") # stage 2: extract elements
+dat_scrape <- html_table(node,dec=",")                   # stage 3: read as data table
 ```
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
 datatable(dat_scrape, extensions = 'Scroller', options = list(deferRender = F, dom = 't',
@@ -200,7 +220,7 @@ datatable(dat_scrape, extensions = 'Scroller', options = list(deferRender = F, d
                                                                      pageLength = 5))
 ```
 ## Scraping less structured data
-- Much of the data online you may want to scrape will not be already structured into tables
+- Much of the data online you may want to scrape will not be already structured into tables & may lack unique nodes for each data type 
 - For instance [Cargill's grievance data](https://www.cargill.com/sustainability/palm-oil/managing-grievances)
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
@@ -252,17 +272,22 @@ datatable(dat_scrape2, extensions = 'Scroller',
 ```
 
 ## key takeaways:
-- use of lists
-- recursive activities
-- identifying correct node & limitations of this with messy data
+- Scraping is messy & very fiddly
+- Where data has clear structure reflected in nodes with unique identifiers (via tag/class/xpath) it can be quite easy
+- Where this is not the case, you should:
+  - Using recursive procedures to work node by node (e.g. `purrr::map` in R) 
+  - Using nested data structures that maintain html trees (e.g. `lists` in R)
 
 ## Things not covered
-- how to deal with scrapes that don't work (& thus break your code)
-- dynamic websites + how to deal with (selenium / POST)
+- How to deal with scrapes that don't work & thus break your code (can use `purrr::possibly`)
+- Dynamic websites + how to scrape them (can use selenium / POST)
+- How to add random delay into queries to avoid overloading websites' servers & getting blocked (e.g. via recursive loop that includes `Sys.sleep`)
+- [Polite scraping](https://www.rostrum.blog/2019/03/04/polite-webscrape/) with the `polite` package (makes it easier to identify yourself & your intentions while scraping)
+- Scraping using other platforms (e.g. Python)
 
 ## Conclusion
 - A lot of data online is available through APIs, even when it doesn't appear to be
-- Where possible, use an API, as it will almost always be easier & more reliable than scraping
+- Where possible, use an API, as it will almost always be easier & more reliable than scraping (will also avoid overloading website )
 - In either case, the **inspector panel** & **developer tools** are your friends
   - Use the **network tab** to search for an API or other external data source
   - Use the **elements tab** to search for the node(s) you want to scrape
