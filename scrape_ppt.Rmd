@@ -180,7 +180,7 @@ Only scrape a website if:
   - To avoid this, you can add a random delay between requests, giving server enough time to handle requests from all users
 - Further reading [here](https://data-lessons.github.io/library-webscraping-DEPRECATED/05-conclusion/) & [here](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01)
 
-## Basic procudre of a web scrape
+## Basic procedure of a web scrape
 Scraping is done through three key steps:
 
 1. Get the HTML for the web page that you want to scrape
@@ -196,7 +196,7 @@ Scraping is done through three key steps:
 
 
 ## Example - AgroLink
-Brazilian agro-business company that tracks prices of various commodities over time, incl. [soy](https://www.agrolink.com.br/cotacoes/historico/mt/soja-em-grao-sc-60kg)
+Agrolink is a Brazilian agro-business company that tracks prices of various commodities over time, incl. [soy](https://www.agrolink.com.br/cotacoes/historico/mt/soja-em-grao-sc-60kg)
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
 knitr::include_url("https://www.agrolink.com.br/cotacoes/historico/mt/soja-em-grao-sc-60kg")
@@ -230,11 +230,11 @@ knitr::include_url("https://www.cargill.com/sustainability/palm-oil/managing-gri
 ## Example - Cargill grievances
 ```{r message=FALSE,warning=FALSE,echo=TRUE}
 url4 <- "https://www.cargill.com/sustainability/palm-oil/managing-grievances"
-html2 <- read_html(url4) #read html
+html2 <- read_html(url4) #stage 1
 
 # scrape company names (dropdown headers)
-comps <- html_elements(html2,".showhide-header") %>% 
-  html_text2(preserve_nbsp=TRUE)
+headers <- html_elements(html2,".showhide-header") # stage 2 
+comps   <- html_text2(headers, preserve_nbsp=TRUE) # stage 3
 
 #scrape grievance issue per company & per grievance entity  
 grievance <- html2 %>%
