@@ -271,7 +271,7 @@ datatable(dat_scrape2, extensions = 'Scroller',
                          scrollY = 300, scroller = TRUE, scrollX = T,pageLength = 5))
 ```
 
-## key takeaways
+## Key takeaways
 1. Scraping is messy & very fiddly
 2. Where data has clear structure reflected in nodes with unique identifiers (via tag/class/XPATH), scraping can be completed with a very small amount of code
 3. Where data has a messy structure, you should:
