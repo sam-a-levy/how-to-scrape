@@ -61,7 +61,7 @@ library(sf)
 ```{r message=FALSE, warning=FALSE, , echo=FALSE, wrap=TRUE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
-<iframe src=https://sam-a-levy.github.io/how-to-scrape/AjudadaAPISidra.html></iframe>
+<iframe src=https://sam-a-levy.github.io/how-to-scrape/assoc_files/AjudadaAPISidra.html></iframe>
 
 
 
@@ -73,7 +73,7 @@ This will be provide data simply by searching the URL in your browser
 #knitr::include_url("https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324?formato=json")
 knitr::opts_chunk$set(echo = FALSE)
 ```
-<iframe src=https://sam-a-levy.github.io/how-to-scrape/9324.html></iframe>
+<iframe src=https://sam-a-levy.github.io/how-to-scrape/assoc_files/9324.html></iframe>
 
 ## API example - IBGE
 But can be also easily read by a program like R or Python
@@ -136,12 +136,12 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Example - Barry Hallebaut's suppliers 
 Element tab will help you find which html nodes containing the desired data
 
- <center><img src= https://sam-a-levy.github.io/how-to-scrape/Screenshot-barry-cal-2.png style= "height: 500px"/></center>
+ <center><img src= https://sam-a-levy.github.io/how-to-scrape/assoc_files/Screenshot-barry-cal-2.png style= "height: 500px"/></center>
 
 ## Example - Barry Hallebaut's suppliers 
 Network tab will help you find out whether the website is drawing its data from an external source (incl. an API and where to find these sources). In this case, website is accessing data from https://services1.arcgis.com
 
- <center><img src= https://sam-a-levy.github.io/how-to-scrape/Screenshot-barry-cal-1.png style= "height: 425px"/></center>
+ <center><img src= https://sam-a-levy.github.io/how-to-scrape/assoc_files/Screenshot-barry-cal-1.png style= "height: 425px"/></center>
 
 ## Example - Barry Hallebaut's suppliers
 ```{r message = FALSE, warning=FALSE, echo=TRUE}
