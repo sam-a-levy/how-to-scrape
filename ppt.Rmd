@@ -36,15 +36,25 @@ library(sf)
 ## What is web scraping? 
 - Range of techniques to use software (e.g. R & Python) to extract **data embedded in websites** and store it in **easy to analyse formats**
 - it is often long, fiddly & computationally intensive 
-- Web scraping can also breach the usage rights of a website & may lead to you getting blocked
+- Web scraping can also breach the usage rights of a website & could lead to you getting blocked by the website you are scraping
 
 
 <div class="rows-2">
   <center>![](https://www.webharvy.com/images/web%20scraping.png)</center>
 
+## Ethics of web scraping
+- Web scraping can be illegal if:
+  - Terms/conditions specifically prohibit downloading/copying content
+  - You pass off data as your own/republish in original form (i.e. breach "fair use")
+- In practice, scraping is tolerated if you **do not disrupt websites' regular use**
+  - This can occur if querying website repeatedly & accessing large number of pages (i.e. many requests to site's server) causing server to run out of resources or crash, blocking normal users access
+  - This is essentially a Denial of Service (DoS) attack & can lead to you being blocked by the website
+  - To avoid this, you can add a random delay between requests, giving server enough time to handle requests from all users
+- Further reading [here](https://data-lessons.github.io/library-webscraping-DEPRECATED/05-conclusion/) & [here](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01)
+
   
 ## What are Application Programming Interfaces (APIs)?
-- APIs are structured interfaces  allowing a program/computer to access the features or data of another program/computer directly & should come with documentation explaining how to use it
+- APIs are lightweight, structured interfaces  allowing a program/computer to access the features or data of another program/computer directly & should come with documentation explaining how to use it
 - REST APIs are the most common & are used by large organisations (e.g. Twitter,UNDP, IBGE) to help you access their data 
 - Also used by many websites to access the data they are displaying
 
@@ -169,16 +179,6 @@ Only scrape a website if:
 - The site/site owner does not provide an API
 - The site does not access its data from an accessible external source (e.g. via API)
    - **Note: some sites may use a password protected external source & you will need to scrape**
-
-## Ethics of web scraping
-- Web scraping can be illegal if:
-  - Terms/conditions specifically prohibit downloading/copying content
-  - You pass off data as your own/republish in original form (i.e. breach "fair use")
-- In practice, scraping is tolerated if you **do not disrupt websites' regular use**
-  - This can occur if querying website repeatedly & accessing large number of pages (i.e. many requests to site's server) causing server to run out of resources or crash, blocking normal users access
-  - This is essentially a Denial of Service (DoS) attack & can lead to you being blocked by the website
-  - To avoid this, you can add a random delay between requests, giving server enough time to handle requests from all users
-- Further reading [here](https://data-lessons.github.io/library-webscraping-DEPRECATED/05-conclusion/) & [here](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01)
 
 ## Basic procedure of a web scrape
 Scraping is done through three key steps:
