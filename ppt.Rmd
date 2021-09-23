@@ -47,9 +47,9 @@ library(sf)
   - Terms & conditions specifically prohibit downloading/copying content
   - You pass off data as your own/republish in original form (i.e. breach "fair use")
 - In practice, scraping is tolerated if you **do not disrupt websites' regular use**
-  - This can occur if querying website repeatedly & accessing large number of pages (i.e. many requests to site's server) causing server to run out of resources or crash, blocking normal users access
+  - This can occur if querying website repeatedly & accessing large number of pages (i.e. many requests to site's server), causing server to run out of resources or crash, blocking normal users' access
   - This is essentially a Denial of Service (DoS) attack & can lead to you being blocked by the website
-  - To avoid this, you can add a random delay between requests, giving server enough time to handle requests from all users
+  - To avoid this, you can **add a random delay between requests**, giving server enough time to handle requests from all users
 - Further reading [here](https://data-lessons.github.io/library-webscraping-DEPRECATED/05-conclusion/) & [here](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01)
 
   
