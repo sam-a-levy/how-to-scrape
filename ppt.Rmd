@@ -29,7 +29,7 @@ library(sf)
 3. **How to determine if a website is using an API**
 4. **How to scrape data**
 
-  <font size="5">note: examples will use R</font>
+  <font size="5" color = "red" >**Note: examples will use R**</font>
 
 <center><img src=https://ca-times.brightspotcdn.com/dims4/default/fa06a0e/2147483647/strip/true/crop/2000x1125+0+0/resize/840x473!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Ff0%2F45%2Fc8c6df9b74df5ce328db5631cc09%2Fla-jadamstein-1482260620-snap-photo style="height: 300px"/></center>
 
@@ -44,7 +44,7 @@ library(sf)
 
 ## Ethics of web scraping
 - Web scraping can be illegal if:
-  - Terms/conditions specifically prohibit downloading/copying content
+  - Terms & conditions specifically prohibit downloading/copying content
   - You pass off data as your own/republish in original form (i.e. breach "fair use")
 - In practice, scraping is tolerated if you **do not disrupt websites' regular use**
   - This can occur if querying website repeatedly & accessing large number of pages (i.e. many requests to site's server) causing server to run out of resources or crash, blocking normal users access
@@ -63,7 +63,7 @@ library(sf)
 
 
 ## API example - IBGE
-- IBGE offers both an API & a [website](https://apisidra.ibge.gov.br/home/ajuda) to help you learn how to access it
+- IBGE offers both an API & a [webpage](https://apisidra.ibge.gov.br/home/ajuda) to help you learn how to access it
 - Like all REST APIs functions via http requests (essentially a structured URL)
 - e.g. population of Brazil over time can be accessed via https://apisidra.ibge.gov.br/values/t/6579/v/9324/n3/all?formato=json
 
@@ -127,7 +127,7 @@ datatable(pop_sidrar, extensions = 'Scroller', options = list(deferRender = F, d
 ```
 
 ## Websites that use APIs & how to access
-- Many times a website will be using an API to present data on its website, although this may not be obvious
+- Often websites use APIs to access the data they are presenting, although this may not be obvious
 - To determine this you need to use the **inspector panel** & other **developer tools**
   
   <center><img src=https://i.stack.imgur.com/pyOWC.png style="height: 400px"/></center>
@@ -144,12 +144,12 @@ knitr::opts_chunk$set(echo = FALSE)
  <center><img src= https://i.ytimg.com/vi/EpjvJAmIEmY/maxresdefault.jpg style= "height: 400px"/></center>
 
 ## Example - Barry Hallebaut's suppliers 
-Element tab will help you find which html nodes containing the desired data
+Element tab will help you find which HTML nodes containing the desired data
 
  <center><img src= https://sam-a-levy.github.io/how-to-scrape/assoc_files/Screenshot-barry-cal-2.png style= "height: 500px"/></center>
 
 ## Example - Barry Hallebaut's suppliers 
-Network tab will help you find out whether the website is drawing its data from an external source (incl. an API and where to find these sources). In this case, website is accessing data from https://services1.arcgis.com
+Network tab will help you find out whether the website is drawing its data from external sources (e.g. an API) and where to find these sources. In this case, Barry Hallebaut is accessing data from https://services1.arcgis.com
 
  <center><img src= https://sam-a-levy.github.io/how-to-scrape/assoc_files/Screenshot-barry-cal-1.png style= "height: 425px"/></center>
 
@@ -177,7 +177,7 @@ datatable(data_sf, height=200,extensions = 'Scroller', options = list(deferRende
 Only scrape a website if:
 
 - The site/site owner does not provide an API
-- The site does not access its data from an accessible external source (e.g. via API)
+- The site does not access its data from an accessible external source (e.g. via an API)
    - **Note: some sites may use a password protected external source & you will need to scrape**
 
 ## Basic procedure of a web scrape
@@ -189,8 +189,8 @@ Scraping is done through three key steps:
 
 ## Working with HTML
 - HTML uses a tree structure of nodes (also called elements), styled using CSS
-- A node will have HTML tags & can have CSS classes/other features with following syntax: `<tag.class>`
-- specific nodes can be identified through their node/class or through XPATH, a query expression for node selection
+- A node will have HTML tags & can have CSS IDs or classes with following syntax: `<tag#id.class>`
+- Specific nodes can be identified through their node/class or through XPATH, a query expression for node selection
 
 <center><img src= https://i.ytimg.com/vi/90kC1YLNF3U/maxresdefault.jpg style= "height: 330px"/></center>
 
@@ -208,7 +208,7 @@ library(rvest)                                           # read necessary R pack
 library(xml2)
 
 url3 <- "https://www.agrolink.com.br/cotacoes/historico/mt/soja-em-grao-sc-60kg"
-html <- read_html(url3)                                  # stage 1: get html
+html <- read_html(url3)                                  # stage 1: get HTML
 node <- html_element(html,".table-striped.agk-cont-tb1") # stage 2: extract elements
 dat_scrape <- html_table(node,dec=",")                   # stage 3: read as data table
 ```
@@ -241,8 +241,8 @@ grievance <- html2 %>%
   html_elements(".mod-content") %>%                  #extract node for each company
   html_text(trim=T)  %>%                             #extract text
   as.list() %>%                                      #convert to list
-  map(str_split,pattern="Issue Under Review: ",simplify=T) %>% #split at issue
-  map(function(x){x[x!=""]}) %>%                     #drop empty strings
+  map(str_split,pattern="Issue Under Review: ",simplify=T) %>%     #split at issue
+  map(function(x){x[x!=""]}) %>%                                   #drop empty strings
   map(function(x){map(x,str_split,pattern="\n\n",n=3,simplify=T)}) #split at \n\n 3x
 
 #attach company names to grievance data
@@ -273,10 +273,10 @@ datatable(dat_scrape2, extensions = 'Scroller',
 
 ## Key takeaways
 1. Scraping is messy & very fiddly
-2. Where data has clear structure reflected in nodes with unique identifiers (via tag/class/XPATH), scraping can be completed with a very small amount of code
+2. Where data has clear structure reflected in nodes with unique identifiers (via HTML tag/CSS/XPATH), scraping can be completed with a very small amount of code
 3. Where data has a messy structure, you should:
     - Use recursive procedures to work node by node (e.g. `purrr::map` in R) 
-    - Use nested data structures that maintain html trees (e.g. `lists` in R)
+    - Use nested data formats that maintain HTML tree structure (e.g. `lists` in R)
     - Use string splitting tools to split data where appropriate
 
 ## Things not covered
@@ -306,4 +306,4 @@ datatable(dat_scrape2, extensions = 'Scroller',
 - `jsonlite` - read json data into R easily
 - `geojsonio` - read geojson data into R easily
 
-##  {data-background="https://media.makeameme.org/created/thanks-for-watching-5aa19e.jpg"}
+##  Thanks <br> And...<br> {data-background="https://stevenmortimer.com/blog/scraping-responsibly-with-r/always-scrape-responsibly.jpg"}
