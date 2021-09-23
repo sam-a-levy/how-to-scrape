@@ -293,8 +293,7 @@ datatable(dat_scrape2, extensions = 'Scroller',
   - Use the **network tab** to search for an API or other external data source
   - Use the **elements tab** to search for the node(s) you want to scrape
 
-
-<font size="5">note: code used to create this presentation can be found on my [GitHub](https://github.com/sam-a-levy/how-to-scrape)</font>
+<br><font size="5">note: code used to create this presentation can be found on my [GitHub](https://github.com/sam-a-levy/how-to-scrape)</font><br>
 
 ## Useful packages in R 
 - `rvest` - main package for scraping websites in R (uses `xml2` & `httr`)
@@ -306,4 +305,4 @@ datatable(dat_scrape2, extensions = 'Scroller',
 - `jsonlite` - read json data into R easily
 - `geojsonio` - read geojson data into R easily
 
-##  Thanks <br> And...<br> {data-background="https://stevenmortimer.com/blog/scraping-responsibly-with-r/always-scrape-responsibly.jpg"}
+##  Thanks <br>&nbsp;And...<br> {data-background="https://stevenmortimer.com/blog/scraping-responsibly-with-r/always-scrape-responsibly.jpg"}
