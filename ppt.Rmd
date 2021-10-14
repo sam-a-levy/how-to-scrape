@@ -34,7 +34,7 @@ library(sf)
 <center><img src=https://ca-times.brightspotcdn.com/dims4/default/fa06a0e/2147483647/strip/true/crop/2000x1125+0+0/resize/840x473!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Ff0%2F45%2Fc8c6df9b74df5ce328db5631cc09%2Fla-jadamstein-1482260620-snap-photo style="height: 300px"/></center>
 
 ## What is web scraping? 
-- Range of techniques to use software (e.g. R & Python) to extract **data embedded in websites** and store it in **easy to analyse formats**
+- Range of techniques to use a computing platform (e.g. R & Python) to extract **data embedded in websites** and store it in **easy to analyse formats**
 - it is often long, fiddly & computationally intensive 
 - Web scraping can also breach the usage rights of a website & could lead to you getting blocked by the website you are scraping
 
