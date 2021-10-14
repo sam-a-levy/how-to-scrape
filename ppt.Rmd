@@ -278,6 +278,7 @@ datatable(dat_scrape2, extensions = 'Scroller',
     - Use recursive procedures to work node by node (e.g. `purrr::map` in R) 
     - Use nested data formats that maintain HTML tree structure (e.g. `lists` in R)
     - Use string splitting tools to split data where appropriate
+    - Can also use if else clauses to achieve the same goal (not covered in presentation)
 
 ## Things not covered
 - How to deal with scrapes that don't work & thus break your code (can use `purrr::possibly`)
@@ -304,5 +305,6 @@ datatable(dat_scrape2, extensions = 'Scroller',
 - `polite` - scraping sites politely
 - `jsonlite` - read json data into R easily
 - `geojsonio` - read geojson data into R easily
+- `tidyverse` - group of packages to make coding easier, includes `purrr::map()` as well as `%>%` and `tidyr::pivot_wider` used here
 
 ##  Thanks <br>&nbsp;And...<br> {data-background="https://stevenmortimer.com/blog/scraping-responsibly-with-r/always-scrape-responsibly.jpg"}
